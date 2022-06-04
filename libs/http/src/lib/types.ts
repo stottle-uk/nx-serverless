@@ -4,6 +4,7 @@ import type {
   Callback,
   Context,
 } from 'aws-lambda';
+import { InjectionToken } from 'tsyringe';
 
 export interface BodyParams<
   T extends Record<string, unknown> = Record<string, unknown>
@@ -25,20 +26,22 @@ export interface PathParams<
 
 export type EventParams = BodyParams | QueryParams | PathParams;
 
+export type HandlerEvent<P extends EventParams> = Omit<
+  APIGatewayProxyEvent,
+  'body' | 'pathParameters' | 'queryStringParameters'
+> & {
+  body: P extends BodyParams ? P['body'] : null;
+  pathParameters: P extends PathParams ? P['pathParameters'] : null;
+  queryStringParameters: P extends QueryParams
+    ? P['queryStringParameters']
+    : null;
+};
+
 export type Handler<
   P extends EventParams,
   isProtected extends boolean = true
 > = (
-  event: Omit<
-    APIGatewayProxyEvent,
-    'body' | 'pathParameters' | 'queryStringParameters'
-  > & {
-    body: P extends BodyParams ? P['body'] : null;
-    pathParameters: P extends PathParams ? P['pathParameters'] : null;
-    queryStringParameters: P extends QueryParams
-      ? P['queryStringParameters']
-      : null;
-  },
+  event: HandlerEvent<P>,
   context: isProtected extends true ? Context & UserContext : Context,
   callback: Callback<APIGatewayProxyResult>
 ) => void | Promise<APIGatewayProxyResult>;
@@ -48,3 +51,5 @@ export type UserContext = {
     id: string;
   };
 };
+
+export const USER_EMAIL: InjectionToken<string> = Symbol.for('USER_EMAIL');

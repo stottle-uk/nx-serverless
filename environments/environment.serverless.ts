@@ -1,5 +1,7 @@
 // Serverless configuration files don't work with esbuild,
 // so this workaround must be used when environment variables are needed in the serverless configuration files.
+import 'core-js/proposals/reflect-metadata';
+
 export const envName = process.env.NODE_ENV;
 const envFile = process.env.NODE_ENV ? `.${process.env.NODE_ENV}` : '';
 

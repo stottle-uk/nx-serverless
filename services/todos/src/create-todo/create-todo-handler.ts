@@ -1,24 +1,18 @@
-import { BodyParams } from '@app/http/types';
 import { createProtectedHandler } from '@app/http/handlers';
 import { httpError, httpResponse } from '@app/http/response';
 import { schemaValidator } from '@app/http/schema-validator.middleware';
-import { createTodo, Todo } from '../todo.model';
-import { ulid } from 'ulid';
-import { UserKeys } from '@app/users/user.model';
+import { BodyParams } from '@app/http/types';
+import { container } from 'tsyringe';
 import { object, string } from 'yup';
+import { TodoCreateReq, TodoService } from '../todo.model';
 
-type Params = BodyParams<{ title: string }>;
+type Params = BodyParams<TodoCreateReq>;
 
-export const main = createProtectedHandler<Params>(async (event, context) => {
-  const userKeys = new UserKeys(context.user.id);
-
-  const todo = new Todo(
-    { id: ulid(), completed: false, title: event.body.title },
-    userKeys
-  );
+export const main = createProtectedHandler<Params>(async (event) => {
+  const todosService = container.resolve(TodoService);
 
   try {
-    const newTodo = await createTodo(todo);
+    const newTodo = await todosService.create(event.body);
 
     return httpResponse({
       todo: newTodo,

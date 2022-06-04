@@ -7,5 +7,6 @@ module.exports = {
     },
   },
   testEnvironment: 'node',
+  setupFiles: [`<rootDir>/jest.setup.ts`],
   coverageDirectory: '../../coverage/services/todos',
 };

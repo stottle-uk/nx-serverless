@@ -1,16 +1,19 @@
 import { createItem, getItem } from '@app/db/operations';
 import { Item, ItemKeys } from '@app/db/item';
 import { DynamoDB } from 'aws-sdk';
+import { inject, injectable } from 'tsyringe';
+import { USER_EMAIL } from '@app/http/types';
 
 export interface UserModel {
   email: string;
   name: string;
 }
 
+@injectable()
 export class UserKeys extends ItemKeys {
   static ENTITY_TYPE = 'USER';
 
-  constructor(private email: string) {
+  constructor(@inject(USER_EMAIL) private email: string) {
     super();
   }
 
