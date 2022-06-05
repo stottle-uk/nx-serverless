@@ -1,5 +1,5 @@
 module.exports = {
-  displayName: 'todos',
+  displayName: 'todos-manager',
   preset: '../../jest.preset.js',
   globals: {
     'ts-jest': {
@@ -7,6 +7,10 @@ module.exports = {
     },
   },
   testEnvironment: 'node',
+  transform: {
+    '^.+\\.[tj]sx?$': 'ts-jest',
+  },
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   setupFiles: [`../../jest.setup.ts`],
-  coverageDirectory: '../../coverage/services/todos',
+  coverageDirectory: '../../coverage/libs/todos-manager',
 };

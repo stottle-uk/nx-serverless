@@ -1,8 +1,8 @@
-import { createItem, getItem } from '@app/db/operations';
 import { Item, ItemKeys } from '@app/db/item';
+import { createItem, getItem } from '@app/db/operations';
+import { USER_EMAIL } from '@app/http/types';
 import { DynamoDB } from 'aws-sdk';
 import { inject, injectable } from 'tsyringe';
-import { USER_EMAIL } from '@app/http/types';
 
 export interface UserModel {
   email: string;
@@ -33,8 +33,8 @@ export class User extends Item<UserModel> {
 
   static fromItem(attributeMap: DynamoDB.AttributeMap): UserModel {
     return {
-      email: attributeMap.email.S,
-      name: attributeMap.name.S,
+      email: attributeMap.email.S || '',
+      name: attributeMap.name.S || '',
     };
   }
 
@@ -56,5 +56,5 @@ export async function createUser(user: User): Promise<UserModel> {
 export async function getUser(userKeys: UserKeys): Promise<UserModel> {
   const result = await getItem(userKeys);
 
-  return User.fromItem(result.Item);
+  return User.fromItem(result.Item || {});
 }

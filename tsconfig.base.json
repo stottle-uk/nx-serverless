@@ -21,6 +21,7 @@
       "@app/db/*": ["libs/db/src/lib/*"],
       "@app/env": ["environments/environment.ts"],
       "@app/http/*": ["libs/http/src/lib/*"],
+      "@app/todos-manager": ["libs/todos-manager/src/index.ts"],
       "@app/users/*": ["services/users/src/*"]
     }
   },

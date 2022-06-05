@@ -1,7 +1,7 @@
 import { HandlerEvent, UserContext, USER_EMAIL } from '@app/http/types';
+import { TodoService } from '@app/todos-manager';
 import { Context } from 'aws-lambda';
 import { container } from 'tsyringe';
-import { TodoService } from '../todo.model';
 import { main } from './get-todos-handler';
 
 describe('get-todos', () => {
@@ -11,11 +11,10 @@ describe('get-todos', () => {
 
   beforeEach(() => {
     todosService = container.resolve(TodoService);
-
     jest.spyOn(todosService, 'getTodos').mockResolvedValueOnce([]);
   });
 
-  it('should do something useful', async () => {
+  it('should get all todos', async () => {
     const res = await main(
       {} as HandlerEvent<any>,
       {} as Context & UserContext

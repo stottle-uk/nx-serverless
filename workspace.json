@@ -6,6 +6,7 @@
     "db": "libs/db",
     "http": "libs/http",
     "todos": "services/todos",
+    "todos-manager": "libs/todos-manager",
     "users": "services/users"
   }
 }

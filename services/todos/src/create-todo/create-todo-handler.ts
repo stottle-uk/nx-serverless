@@ -2,9 +2,9 @@ import { createProtectedHandler } from '@app/http/handlers';
 import { httpError, httpResponse } from '@app/http/response';
 import { schemaValidator } from '@app/http/schema-validator.middleware';
 import { BodyParams } from '@app/http/types';
+import { TodoCreateReq, TodoService } from '@app/todos-manager';
 import { container } from 'tsyringe';
 import { object, string } from 'yup';
-import { TodoCreateReq, TodoService } from '../todo.model';
 
 type Params = BodyParams<TodoCreateReq>;
 
@@ -12,11 +12,9 @@ export const main = createProtectedHandler<Params>(async (event) => {
   const todosService = container.resolve(TodoService);
 
   try {
-    const newTodo = await todosService.create(event.body);
+    const todo = await todosService.create(event.body);
 
-    return httpResponse({
-      todo: newTodo,
-    });
+    return httpResponse({ todo });
   } catch (e) {
     return httpError(e);
   }

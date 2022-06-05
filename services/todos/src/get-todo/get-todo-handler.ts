@@ -1,21 +1,18 @@
-import { PathParams } from '@app/http/types';
 import { createProtectedHandler } from '@app/http/handlers';
 import { httpError, httpResponse } from '@app/http/response';
-import { UserKeys } from '@app/users/user.model';
-import { getTodo, TodoKeys } from '../todo.model';
+import { PathParams } from '@app/http/types';
+import { TodoService } from '@app/todos-manager';
+import { container } from 'tsyringe';
 
 type Params = PathParams<{ id: string }>;
 
-export const main = createProtectedHandler<Params>(async (event, context) => {
-  const userKeys = new UserKeys(context.user.id);
-  const todoKeys = new TodoKeys(event.pathParameters.id, userKeys);
+export const main = createProtectedHandler<Params>(async (event) => {
+  const todosService = container.resolve(TodoService);
 
   try {
-    const todo = await getTodo(todoKeys);
+    const todo = await todosService.getTodo(event.pathParameters.id);
 
-    return httpResponse({
-      todo,
-    });
+    return httpResponse({ todo });
   } catch (e) {
     return httpError(e);
   }
